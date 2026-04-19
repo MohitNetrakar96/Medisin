@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Custom Cursors */
+.default-cursor {
+    cursor: url('/frontend/public//cursor.png'), auto;
+}
+
+.pointer-cursor {
+    cursor: url('/frontend//public/custompointercursor.png'), pointer;
+}
+
+.text-cursor {
+    cursor: url('/frontend//public/customtextcursor.png'), text;
+}
+
+* {
+    font-family: Outfit;
+}
+
+.active hr {
+    @apply block
+}
+
+@media (max-width:740px) {
+    .active  p{
+       @apply text-white bg-primary
+    }
+}
+
+::-webkit-scrollbar {
+    @apply hidden
+}
+
