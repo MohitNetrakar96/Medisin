@@ -16,8 +16,22 @@ connectDB()
 connectCloudinary()
 
 // Configure CORS middleware
+const allowedOrigins = [
+  'http://localhost:5173',   // frontend dev
+  'http://localhost:5174',   // admin dev
+  process.env.FRONTEND_URL, // production frontend (set in Vercel env vars)
+  process.env.ADMIN_URL,    // production admin (set in Vercel env vars)
+].filter(Boolean);
+
 app.use(cors({
-  origin: true, // This allows any origin that makes the request
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, Postman, curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin}`));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'atoken', 'dtoken']
@@ -37,4 +51,10 @@ app.get("/", (req, res) => {
   res.send("API Working")
 });
 
-app.listen(port, () => console.log(`Server started on PORT:${port}`))
+// Use app.listen only in local development
+// Vercel uses the exported app as a serverless function
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => console.log(`Server started on PORT:${port}`))
+}
+
+export default app;
